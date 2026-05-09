@@ -8,8 +8,10 @@
 typedef struct {
   char id[100];
   char title[100];
+  List *director;
   List *genres;
   int year;
+  float rating;
 } Film;
 
 // Menú principal
@@ -21,7 +23,7 @@ void mostrarMenuPrincipal() {
 
   puts("1) Cargar Películas");
   puts("2) Buscar por id");
-  puts("3) ...");
+  puts("3) Buscar por genero");
   puts("4) ...");
   puts("5) ...");
   puts("6) ...");
@@ -56,7 +58,7 @@ int is_equal_int(void *key1, void *key2) {
 /**
  * Carga películas desde un archivo CSV y las almacena en un mapa por ID.
  */
-void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres) {
+void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres, Map *pelis_bydirector, Map *pelis_bydecada) {
   // Intenta abrir el archivo CSV que contiene datos de películas
   FILE *archivo = fopen("data/Top1500.csv", "r");
   if (archivo == NULL) {
@@ -76,9 +78,11 @@ void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres) {
     Film *peli = (Film *)malloc(sizeof(Film));
     strcpy(peli->id, campos[1]);        // Asigna ID
     strcpy(peli->title, campos[5]);     // Asigna título
+    peli->director = split_string(campos[14], ",");
     peli->genres = split_string(campos[11], ",");       // Inicializa la lista de géneros
-    peli->year = atoi(campos[10]); // Asigna año, convirtiendo de cadena a entero
-
+    peli->year = atoi(campos[10]);      // Asigna año, convirtiendo de cadena a entero
+    peli->rating = atof(campos[8]);    
+    
     
     // Inserta la película en el mapa usando el ID como clave
     map_insert(pelis_byid, peli->id, peli);
@@ -103,6 +107,20 @@ void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres) {
 
         // Avanza al siguiente género en la lista
         genre = list_next(peli->genres);
+    }
+    char *director =list_first(peli->director);
+    while(director != NULL){
+      MapPair *directorPair = map_search(pelis_bydirector, director);
+      if(directorPair == NULL){
+        List *listaNueva = list_create();
+        list_pushBack(listaNueva, peli);
+        map_insert(pelis_bydirector, director, listaNueva);
+      }
+      else{
+        List *directorList = (List*)directorPair->value;
+        list_pushBack(directorList, peli);
+      }
+      director = list_next(peli->director);
     }
     
   }
@@ -159,6 +177,8 @@ int main() {
   // comparación que trabaja con claves de tipo string.
   Map *pelis_byid = map_create(is_equal_str);
   Map *pelis_bygenres = map_create(is_equal_str);
+  Map *pelis_bydirector = map_create(is_equal_str);
+  Map *pelis_bydecada = map_create(is_equal_int);
 
   // Recuerda usar un mapa por criterio de búsqueda
 
@@ -169,12 +189,13 @@ int main() {
 
     switch (opcion) {
     case '1':
-      cargar_peliculas(pelis_byid, pelis_bygenres);
+      cargar_peliculas(pelis_byid, pelis_bygenres, pelis_bydirector, pelis_bydecada);
       break;
     case '2':
       buscar_por_id(pelis_byid);
       break;
     case '3':
+      buscar_por_genre(pelis_bygenres);
       break;
     case '4':
       break;
