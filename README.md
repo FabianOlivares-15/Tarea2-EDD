@@ -1,14 +1,14 @@
 En este *repl* puedes encontrar varios ejemplos que te pueden ayudar con las tareas de estructura.
 
-## Código de (tarea1)
-Para ejecutar el ejemplo tarea1 primero debemos compilar (en la carpeta raíz)
+## Código de (tarea2)
+Para ejecutar el ejemplo tarea2 primero debemos compilar (en la carpeta raíz)
 ````
-gcc tdas/*.c tarea1.c -Wno-unused-result -o tarea1
+gcc tdas/*.c tarea2.c -Wno-unused-result -o tarea2
 ````
 
 Y luego ejecutar:
 ````
-./tarea1
+./tarea2
 ````
 
 ## TDAs
