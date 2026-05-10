@@ -205,9 +205,9 @@ void buscar_por_genre(Map *pelis_bygenres){
         if(dir != NULL){
           printf(", ");
         }
+      }
       printf("\n");
       peli = (Film*)list_next(peliculasDeGenre);
-      }
     }
   }
   else{
@@ -233,9 +233,9 @@ void buscar_por_director(Map *pelis_bydirector){
         if(genre != NULL){
           printf(", ");
         }
+      }
       printf("\n");
       peli = (Film*)list_next(peliculasDeDirector);
-      }
     }
   }
   else{
