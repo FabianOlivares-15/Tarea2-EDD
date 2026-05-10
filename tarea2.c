@@ -279,11 +279,11 @@ void busqueda_avanzada(Map *pelis_bygenres){
   printf("Ingrese el genero: ");
   scanf(" %[^\n]", genre);
   
-  printf("Ingrese el año para buscar la decada: ");
-  scanf("%d", &anioBuscar);
-  int decadaBuscada = (anioBuscar / 10) * 10;
   MapPair *pair = map_search(pelis_bygenres, genre);
   if(pair != NULL){
+    printf("Ingrese el año para buscar la decada: ");
+    scanf("%d", &anioBuscar);
+    int decadaBuscada = (anioBuscar / 10) * 10;
     List *listaPeliculas = (List*)pair->value;
     Film *peli = (Film*)list_first(listaPeliculas);
     bool encontradas = false;
