@@ -28,7 +28,7 @@ void mostrarMenuPrincipal() {
   puts("4) Buscar por director");
   puts("5) Buscar por decada");
   puts("6) Busqueda avanzada");
-  puts("7) Gestionar mi watchlist FALTA POR HACER");
+  puts("7) Gestionar mi watchlist");
   puts("8) Salir");
 }
 
@@ -211,7 +211,7 @@ void buscar_por_genre(Map *pelis_bygenres){
     }
   }
   else{
-    printf("No se encontraron peliculas del genero %s", genre);
+    printf("No se encontraron peliculas del genero %s\n", genre);
   }
 }
 
@@ -239,7 +239,7 @@ void buscar_por_director(Map *pelis_bydirector){
     }
   }
   else{
-    printf("No se encontraron peliculas del director %s", director);
+    printf("No se encontraron peliculas del director %s\n", director);
   }
 }
 
@@ -301,8 +301,88 @@ void busqueda_avanzada(Map *pelis_bygenres){
     }
   }
   else{
-    printf("No existe el genero %s", genre);
+    printf("No existe el genero %s\n", genre);
   }
+}
+
+void agregarIdWatchlist(Map *pelis_byid, List *miWatchList){
+  char id[50];
+  printf("Ingrese el id de la pelicula: ");
+  scanf(" %s", id);
+  MapPair *pair = map_search(pelis_byid, id);
+  if(pair == NULL){
+    printf("Este id %s no existe en el catalogo\n", id);
+  }
+  else{
+    Film *peli = (Film*)pair->value;
+    list_pushBack(miWatchList, peli);
+    printf("La pelicula llamada %s fue agregada\n", peli->title);
+  }
+}
+
+void eliminarDeWatchlist(List *miWatchlist){
+  char id[50];
+  printf("Ingrese el id de la pelicula a eliminar: ");
+  scanf(" %s", id);
+  Film *peli = (Film*)list_first(miWatchlist);
+  bool encontrado = false;
+  while(peli != NULL){
+    if(strcmp(peli->id, id) ==0){
+      list_popCurrent(miWatchlist);
+      printf("Se elimino la pelicula %s\n", peli->title);
+      encontrado = true;
+      break;
+    }
+    peli = (Film*)list_next(miWatchlist);
+  }
+  if(!encontrado){
+    printf("Este id no esta en tu watchlist\n", id);
+  }
+}
+
+void mostrarWatchlist(List *miWatchlist){
+  printf("-----Mi Watchlist-----\n");
+  Film *peli = (Film*)list_first(miWatchlist);
+  if(peli == NULL){
+    printf("No tienes nada en tu watchlist\n");
+  }
+  else{
+    while(peli != NULL){
+      printf("ID: %s | Titulo: %s | Año: (%d) | Rating: %1.f", peli->id, peli->title, peli->year, peli->rating);
+      peli = (Film*)list_next(miWatchlist);
+    }
+  }
+}
+
+void gestionar_watchlist(Map *pelis_byid, List *watchList){
+  char opcion;
+  do{
+    limpiarPantalla();
+    puts("========================================");
+    puts("     Gestionar Mi Watchlist");
+    puts("========================================");
+
+    puts("1) Agregar pelicula por ID");
+    puts("2) Eliminar pelicula");
+    puts("3) Mostrar mi watchlist");
+    puts("4) Salir al menu");
+    printf("Ingrese su opcion: ");
+    scanf(" %c", &opcion);
+
+    switch (opcion){
+      case '1':
+        agregarIdWatchlist(pelis_byid, watchList);
+        break;
+      case '2':
+        eliminarDeWatchlist(watchList);
+        break;
+      case '3':
+        mostrarWatchlist(watchList);
+        break;
+    }
+    presioneTeclaParaContinuar();
+    
+  }while(opcion != '4');
 }
 
 int main() {
@@ -344,6 +424,7 @@ int main() {
       busqueda_avanzada(pelis_bygenres);
       break;
     case '7':
+      gestionar_watchlist(pelis_byid, miWatchlist);
       break;
     }
     presioneTeclaParaContinuar();
