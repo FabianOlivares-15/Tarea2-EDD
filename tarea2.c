@@ -181,7 +181,7 @@ void buscar_por_id(Map *pelis_byid) {
     Film *peli =
         pair->value; // Obtiene el puntero a la estructura de la película
     // Muestra el título y el año de la película
-    printf("Título: %s, Año: %d\n", peli->title, peli->year);
+    printf("Título: %s | Año: %d\n", peli->title, peli->year);
   } else {
     // Si no se encuentra la película, informa al usuario
     printf("La película con id %s no existe\n", id);
