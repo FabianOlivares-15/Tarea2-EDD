@@ -336,7 +336,7 @@ void eliminarDeWatchlist(List *miWatchlist){
     peli = (Film*)list_next(miWatchlist);
   }
   if(!encontrado){
-    printf("Este id no esta en tu watchlist\n", id);
+    printf("Este id %s no esta en tu watchlist\n", id);
   }
 }
 
@@ -348,7 +348,7 @@ void mostrarWatchlist(List *miWatchlist){
   }
   else{
     while(peli != NULL){
-      printf("ID: %s | Titulo: %s | Año: (%d) | Rating: %1.f", peli->id, peli->title, peli->year, peli->rating);
+      printf("ID: %s | Titulo: %s | Año: (%d) | Rating: %1.f\n", peli->id, peli->title, peli->year, peli->rating);
       peli = (Film*)list_next(miWatchlist);
     }
   }
